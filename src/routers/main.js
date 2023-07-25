@@ -12,7 +12,7 @@ router
 
     .get('/profile',jwtAuth, getMyProfile)
 
-router.get('/', (req, res) => res.status(200).json("Welcome to API admin") )
+router.get('/', (req, res) => res.status(200).json("Welcome to API Test") )
 
 router.get('*', (req, res) => res.status(400).json({message: "Page Not Found"}));
 
