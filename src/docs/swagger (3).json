@@ -1,0 +1,1978 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Rent Book and Movie REST API",
+        "description": "This is REST API for Rent Books and Movies database",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/register":{
+            "post":{
+              "tags": ["Auth"],
+              "summary": "Register user from public access.",
+              "requestBody":{
+                "required": true,
+                "content":{
+                  "application/json":{
+                    "schema":{
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "A JSON array of register",
+                  "content": {
+                    "application/json": {
+                      "schema": {    
+                        "$ref": "#/components/schemas/RegisterInput"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        },
+        "/login":{
+            "post":{
+              "tags": ["Auth"],
+              "summary": "Logging in to get jwt token for authorization",
+              "requestBody":{
+                "required": true,
+                "content":{
+                  "application/json":{
+                    "schema":{
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "A JSON array of login",
+                  "content": {
+                    "application/json": {
+                      "schema": {    
+                        "$ref": "#/components/schemas/LoginInput"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        },
+        "/change-password": {
+            "patch": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Update user's password.",
+                "description": "access this path to change password.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                "currentPassword": {
+                                    "type": "string"
+                                },
+                                "newPassword": {
+                                    "type": "string"
+                                },
+                                "confirmNewPassword": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/Profile"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Get user's profile.",
+                "description": "access this path to get profile.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Profile"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Update user's profile.",
+                "description": "access this path to edit profile.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "requestBody":{
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "image_url": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "address": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Profile"
+                        }
+                    }
+                }
+            }
+        },
+        "/rental": {
+            "get": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of rent books and movies.",
+                "description": "access this path for get all rent data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rental"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns the addition of a new rent",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RentalInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rebt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rental"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/rental/user/{id}": {
+            "get": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list user's rent",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for user's rent.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of user's rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRental"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rental/active/{id}": {
+            "get": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list user's rent",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for user's rent.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of user's rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RentalActive"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rental/{id}": {
+            "get": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single rental by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single rent.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rental"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Rental"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a delete rent by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for delete rent by id.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rental"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/createpayment": {
+            "post": {
+                "tags": ["Payment"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns the addition of a new data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePaymentInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rebt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreatePayment"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/payment": {
+            "get": {
+                "tags": ["Payment"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of payment books and movies.",
+                "description": "access this path for get all rent data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Payment"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Payment"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns the addition of a new payment",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PaymentInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rebt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/payment/{id}": {
+            "get": {
+                "tags": ["Payment"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single data by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single data.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Payment"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a delete data by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for delete data by id.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "get": {
+                "tags": ["Cart"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of cart books and movies.",
+                "description": "access this path for get all rent data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Cart"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Cart"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns the addition of a new data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rebt",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cart"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a delete data by id.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartInput"
+                            }
+                        }
+                    }
+                },
+                "description": "access this path for delete data by id.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/{id}": {
+            "get": {
+                "tags": ["Cart"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single data by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single data.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user":{
+            "get": {
+                "tags": ["Get and Delete User By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of users.",
+                "description": "access this path for get all user data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserAdmin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user/{id}":{
+            "get": {
+                "tags": ["Get and Delete User By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single user by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single user.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserAdmin"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Get and Delete User By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a delete user by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for delete data by id.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserAdmin"
+                                }
+                            }
+                        }
+                    }
+                } 
+            }
+        },
+        "/admin/user-profile":{
+            "get": {
+                "tags": ["Get User Profile By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of user's profile.",
+                "description": "access this path for get all user's profile data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Profile"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user-profile/{id}":{
+            "get": {
+                "tags": ["Get User Profile By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single user's profile by user's id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single user's profile.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Profile"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/rental":{
+            "get": {
+                "tags": ["Get Rental By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of rental.",
+                "description": "access this path for get all rental data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rental"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/rental/{id}":{
+            "get": {
+                "tags": ["Get Rental By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single rental by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single rental.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rental"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/payment":{
+            "get": {
+                "tags": ["Get Payment By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns a list of payments.",
+                "description": "access this path for get all payment data.",
+
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of rent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Payment"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+        },
+        "/admin/payment/{id}":{
+            "get": {
+                "tags": ["Get Payment By Admin"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Returns single payment by id.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "description": "access this path for get single payment.",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Payment"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/item": {
+            "get": {
+                "tags": ["Item"],
+                "summary": "Returns all items",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Item"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Add an item",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ItemInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Item"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/item/{id}": {
+            "get": {
+                "tags": ["Item"],
+                "summary": "Returns item by id",
+                "description": "no need auth",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Parameter description in CommonMark or HTML.",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Item"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Update an item",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id item to return",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ItemInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Item"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Delete an item",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id item to delete",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Item"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/item-category/{category}": {
+            "get":  {
+                "tags": ["Item"],
+                "summary": "Returns item by category (movie or book)",
+                "description": "no need auth",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "description": "Movie or Book",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "movie","book"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Item"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/genre": {
+            "get": {
+                "tags": ["Genre"],
+                "summary": "Return all genres",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of genres",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Genre"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Genre"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Add a genre",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GenreInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Genre"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/genre/{id}": {
+            "get": {
+                "tags": ["Genre"],
+                "summary": "Return a genre by id",
+                "description": "no need auth",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of genre",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Genre"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["Genre"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Update a genre",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id genre to update",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GenreInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Genre"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Genre"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Delete a genre",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id genre to delete",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Genre"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/item-genre": {
+            "get": {
+                "tags": ["Genre of Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Return all item-genres in ItemGenre table",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item-genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ItemGenre"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/item/{id}/set-genre": {
+            "post": {
+                "tags": ["Genre of Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of genre",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "summary": "Add a genre of an item",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type" : "object",
+                                "properties" : {
+                                    "genre_id" : {
+                                        "type" :"integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item-genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemGenre"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Genre of Item"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Delete a genre of an item",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id of genre",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type" : "object",
+                                "properties" : {
+                                    "genre_id" : {
+                                        "type" :"integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of item-genre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemGenre"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    }
+                }
+            }
+
+        }
+
+    },
+    "components": {
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid"
+            }
+        },
+        "schemas": {
+            "User" : {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "user"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "nama@mail.com"
+                }
+            }
+            },
+            "RegisterInput" : {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginInput" : {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ChangePassInput": {
+                "type": "object",
+                "properties": {
+                    "currentPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "type": "string"
+                    },
+                    "confirmNewPassword": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Profile" : {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "user"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    }
+                }
+            },
+            "ProfileInput" : {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "user"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    },
+                    "phone": {
+                        "type": "integer",
+                        "example": 6281122112
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "nama@mail.com"
+                    }
+                }
+            },
+            "Rental": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "rental_date": {
+                        "type": "string"
+                    },
+
+                    "return_date": {
+                        "type": "string"
+                    }, "Payment": {
+                        "type": "array",
+                        "items": {
+                            "properties" : {
+                                "item_id": {
+                                    "id": "integer",
+                                    "price": "integer",
+                                    "status": "boolean",
+                                    "order_id": "string",
+                                    "rental_id": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UserRental": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+
+                    "email": {
+                        "type": "string"
+                    },
+                    "rental" : {
+                        "type": "object"
+                    }
+                }
+            },
+            "RentalActive": {
+                "type": "object",
+                "properties": {
+                    "item_id": {
+                        "type": "integer"
+                    },
+                    "rental_id": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "RentalInput": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "listItem": {
+                        "type": "array",
+                        "items": {
+                            "properties" : {
+                                "item_id": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Payment": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "order_id": {
+                        "type": "string"
+                    },
+                    "rental_id": {
+                        "type": "integer"
+                    },
+
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "price": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PaymentInput": {
+                "type": "object",
+                "properties": {
+                    "rental_id": {
+                        "type": "integer"
+                    },
+
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "price": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "CreatePayment": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "object"
+                    },
+
+                    "cliectKey": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CreatePaymentInput": {
+                "type": "object",
+                "properties": {
+                    "item": {
+                        "type": "array",
+                        "items": {
+                            "properties" : {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "profile": {
+                        "type": "array",
+                        "items": {
+                            "properties" : {
+                                "first_name": {
+                                    "type": "string"
+                                },
+                                "last_name": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "integer"
+                                },
+                                "address": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Cart": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "item_id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "CartInput": {
+                "type": "object",
+                "properties": {
+                    "item_id": {
+                        "type": "array",
+                        "items": {
+                            "type" : "integer"
+                            }
+                        },
+                    "user_id": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "UserAdmin": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Item": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "creator": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "integer"
+                    },
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "file_url": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "data-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "data-time"
+                    },
+                    "ItemGenre": {
+                        "type": "array",
+                        "items": {
+                            "$ref" : "#/components/schemas/ItemGenre"
+                        }
+                    }
+                }
+            },
+            "ItemInput": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string",
+                        "default": "",
+                        "enum":[
+                            "movie", "book"
+                        ]
+                    },
+                    "creator": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "integer"
+                    },
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "file_url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Genre": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "data-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "data-time"
+                    }
+                }
+            },
+            "GenreInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ItemGenre": {
+                "type": "object",
+                "properties": {
+                    "item_id": {
+                        "type": "integer"
+                    },
+                    "genre_id": {
+                        "type": "integer"
+                    }
+                }
+            }
+
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

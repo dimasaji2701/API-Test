@@ -1,0 +1,364 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Sederhana Untuk Percobaan",
+      "description": "Ini adalah API untuk percobaan",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/register": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Register user from public access.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "description": "Email address of the user."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the user."
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "Password of the user."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "A JSON array of register",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RegisterInput"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized. Access token is missing or invalid.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/responses/UnauthorizedError"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/login": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Logging in to get JWT token for authorization.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "description": "Email address of the user."
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "Password of the user."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "A JSON array of login",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginInput"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized. Access token is missing or invalid.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/responses/UnauthorizedError"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/profile":{
+        "get":{
+            "security":[
+                {
+                    "bearerAuth": []
+                }
+            ],
+            "summary": "Get my profile.",
+            "description": "Access this path to get my profile",
+            "produces": [
+                "application/json"
+            ],
+            "tags":[
+                "Profile"
+            ],
+            "responses":{
+                "200":{
+                    "description":"A JSON of my profile",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post":{
+            "security":[
+                {
+                    "bearerAuth":[]
+                }
+            ],
+            "summary":"Add Profile",
+            "description":"Access this path to add my profile",
+            "produces":[
+                "application/json"
+            ],
+            "tags":["Profile"],
+            "requestBody":{
+                "required":true,
+                "content":{
+                    "application/json":{
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                                "bio":{
+                                    "type":"string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "A JSON array of items",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Profile"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/UnauthorizedError"
+                }
+            }
+        }
+      },
+      "/post":{
+        "post":{
+            "tags":["Post"],
+            "security":[
+                {
+                    "bearerAuth":[]
+                }
+            ],
+            "summary":"Add My Posting",
+            "requestBody":{
+                "content":{
+                    "application/json":{
+                        "schema":{
+                            "$ref": "#/components/schemas/PostingInput"
+                        }
+                    }
+                }
+            },
+            "responses":{
+                "200": {
+                    "description": "A JSON array of items",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Post"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/UnauthorizedError"
+                } 
+            }
+        }
+      }
+
+    },
+    "components": {
+      "responses": {
+        "UnauthorizedError": {
+          "description": "Access token is missing or invalid"
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1,
+              "description": "User ID."
+            },
+            "name": {
+              "type": "string",
+              "example": "user",
+              "description": "User name."
+            },
+            "email": {
+              "type": "string",
+              "example": "nama@mail.com",
+              "description": "User email address."
+            }
+          }
+        },
+        "RegisterInput": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "Email address of the user."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the user."
+            },
+            "password": {
+              "type": "string",
+              "description": "Password of the user."
+            }
+          }
+        },
+        "LoginInput": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "Email address of the user."
+            },
+            "password": {
+              "type": "string",
+              "description": "Password of the user."
+            }
+          }
+        },
+        "Profile":{
+            "type":"object",
+            "properties":{
+                "id":{
+                    "type":"integer",
+                    "example":1
+                },
+                "bio":{
+                    "type":"string",
+                    "example":"Ini adalah Bio"
+                },
+                "userId":{
+                    "type":"integer",
+                    "example":1
+                }
+            }
+        },
+        "ProfileInput":{
+            "type":"object",
+            "properties":{
+                "bio":{
+                    "type":"string",
+                    "example":"Ini adalah Bio"
+                }
+            }
+        },
+        "Post":{
+            "type":"object",
+            "properties":{
+                "id":{
+                    "type":"integer"
+                },
+                "createdAt":{
+                    "type":"string",
+                    "format":"date-time"
+                },
+                "updatedAt":{
+                    "type":"string",
+                    "format":"date-time"
+                },
+                "title":{
+                    "type":"string"
+                },
+                "content":{
+                    "type":"string"
+                },
+                "published":{
+                    "type":"boolean"
+                },
+                "authorId":{
+                    "type":"integer"
+                }
+
+            }
+        },
+        "PostingInput":{
+            "type":"object",
+            "properties":{
+                "title":{
+                    "type":"string"
+                },
+                "content":{
+                    "type":"string"
+                }
+            } 
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
