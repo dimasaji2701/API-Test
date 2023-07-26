@@ -24,7 +24,6 @@ const addProfile = async(req, res) => {
 
 const getMyProfile = async(req, res) => {
     try {
-        const id = req.user.id
         const myProfile = await prisma.user.findMany({
             select:{
                 id: true,
