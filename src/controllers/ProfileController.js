@@ -24,26 +24,27 @@ const addProfile = async(req, res) => {
 
 const getMyProfile = async(req, res) => {
     try {
-        const myProfile = await prisma.user.findMany({
-            select:{
-                id: true,
-                name: true,
-                profile:{
-                    select:{
-                        bio: true
-                    }
-                },
-                posts:{
-                    select:{
-                        title: true,
-                        content: true
-                    }
-                }
-            }
-        })
+        // const myProfile = await prisma.user.findMany({
+        //     select:{
+        //         id: true,
+        //         name: true,
+        //         profile:{
+        //             select:{
+        //                 bio: true
+        //             }
+        //         },
+        //         posts:{
+        //             select:{
+        //                 title: true,
+        //                 content: true
+        //             }
+        //         }
+        //     }
+        // })
+        const profile = await prisma.$queryRaw`Select * from "User";`
         res.status(200).json({
             message: 'successfully',
-            data: myProfile
+            data: profile
         })
     } catch (error) {
         res.status(400).json({
