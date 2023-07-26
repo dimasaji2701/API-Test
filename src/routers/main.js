@@ -10,7 +10,7 @@ router
     .post('/post', jwtAuth, addPost)
     .post('/profile',jwtAuth, addProfile)
 
-    .get('/profile',jwtAuth, getMyProfile)
+    .get('/profile', getMyProfile)
 
 router.get('/', (req, res) => res.status(200).json("Welcome to API Test") )
 

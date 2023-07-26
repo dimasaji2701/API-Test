@@ -26,25 +26,18 @@ const getMyProfile = async(req, res) => {
     try {
         const id = req.user.id
         const myProfile = await prisma.user.findMany({
-            where:{
-                id: id
-            },
             select:{
                 id: true,
                 name: true,
                 profile:{
                     select:{
                         bio: true
-                    },where:{
-                        userId: id
                     }
                 },
                 posts:{
                     select:{
                         title: true,
                         content: true
-                    },where: {
-                        authorId : id
                     }
                 }
             }
